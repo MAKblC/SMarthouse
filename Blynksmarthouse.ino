@@ -9,7 +9,6 @@
 #include <Adafruit_ADS1015.h>
 #include <BlynkSimpleEsp32.h>
 #include <Wire.h>
-#include <SPI.h>                       // конфигурация блинка // Blynk configuration 
 
 #include "TLC59108.h"
 #define HW_RESET_PIN 0 // Только програмнный сброс
@@ -17,10 +16,11 @@
 TLC59108 leds(I2C_ADDR + 7); // Без перемычек добавляется 3 бита адреса
 TLC59108 leds2(I2C_ADDR + 0); // Без перемычек добавляется 3 бита адреса   // RGB модуль
 TLC59108 leds3(I2C_ADDR + 6); // Без перемычек добавляется 3 бита адреса   // RGB модуль
+
 #include <ESP32_Servo.h>                      // конфигурация сервомотора // servo configuration
 
-#include "Adafruit_SGP30.h"      // датчик газа
-Adafruit_SGP30 sgp30;
+#include "SparkFun_SGP30_Arduino_Library.h"  // датчик газа
+SGP30 mySensor;
 
 #include <VL53L0X.h>    /// датчик расстояния
 VL53L0X lox;
@@ -53,8 +53,7 @@ const float moisture_100 = 100.0;
 #include "MCP3221.h"            // микрофон
 const byte DEV_ADDR = 0x4D;
 MCP3221 mcp3221(DEV_ADDR);
-
-#define  pump   16                     // пин насоса // pump pin             
+     
 #define  wind   17                     // пин вентилятора // cooler pin 
 #define  amper  14                     // пин амперметра
 #define  button 4                      // пин кнопки
@@ -136,6 +135,7 @@ const byte picture [] PROGMEM = {      // картинка
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 char ssid[] = "XXXXXXXXX";                            // Логин Wi-Fi  // Wi-Fi login
 char pass[] = "XXXXXXXXXXXX";                    // Пароль от Wi-Fi // Wi-Fi password
@@ -166,12 +166,8 @@ void setup()
   lcd.gotoxy (0, 0);
   lcd.clear (0, 0, 128, 64, 0x00);  // очищаем поле дисплея
 
-
-
-  pinMode( pump, OUTPUT );
   pinMode( button, INPUT );
   pinMode( wind, OUTPUT );       // настройка пинов насоса и вентилятора на выход // pump and cooler pins configured on output mode
-  digitalWrite(pump, LOW);       // устанавливаем насос и вентилятор изначально выключенными // turn cooler and pump off
   digitalWrite(wind, LOW);
 
   Serial.begin(115200);
@@ -191,8 +187,9 @@ void setup()
   buzzer.setVoltage(0, false);   // выключение звука
   delay(1000);
 
-  if (!sgp30.begin())
-    Serial.println("Sensor SGP30 not found!");
+  if (mySensor.begin() == false)
+    Serial.println("No SGP30 Detected. Check connections.");
+  mySensor.initAirQuality();
 
   if (!lsm.begin())
   {
@@ -234,11 +231,11 @@ void setup()
   timer_update.setInterval(UPDATE_TIMER, readSendData);  // включаем таймер обновления данных  // turn on the update timer
   timer_update.setInterval(UPDATE_button, butt);
   timer_update.setInterval(UPDATE_sound, sound);
-  
+
   mcp3021.begin(adcDeviceId);
 }
 //////////////////
-void sound() {                    //  зажигется красный если есть отклонение по оси Х, также открывется картинк на дисплее если был задетекчен звук
+void sound() {                    //  зажгется красный если есть отклонение по оси Х, также открывется картинка на дисплее если был задетекчен звук
   float snd = mcp3221.getVoltage();
   Serial.println(snd);
   lsm.read();
@@ -261,32 +258,32 @@ void sound() {                    //  зажигется красный если
     leds3.setBrightness(2, 0x00);
   }
   poll_sensor();
-  if (ir_data>700){
-        leds3.setBrightness(1, 0xFF);
+  if (ir_data > 700) {
+    leds3.setBrightness(1, 0xFF);
   }
   else {
     leds3.setBrightness(1, 0x00);
-}
+  }
   float l = LightSensor_1.getAmbientLight();
-  if(l<150){
+  if (l < 150) {
     leds.setBrightness(0, 0xFF);
     leds2.setBrightness(0, 0xFF);
     leds3.setBrightness(0, 0xFF);
-      leds.setBrightness(6, 0xFF);
+    leds.setBrightness(6, 0xFF);
     leds2.setBrightness(6, 0xFF);
     leds3.setBrightness(6, 0xFF);
   }
-  else{
-     leds.setBrightness(0, 0x00);
+  else {
+    leds.setBrightness(0, 0x00);
     leds2.setBrightness(0, 0x00);
     leds3.setBrightness(0, 0x00);
-      leds.setBrightness(6, 0x00);
+    leds.setBrightness(6, 0x00);
     leds2.setBrightness(6, 0x00);
     leds3.setBrightness(6, 0x00);
   }
 }
 ////////////////              //
-void butt() {                         // при нажатии кнопки загорается светодиод в блинке, загорается красный и уФ в ргб модулях и картинк исчезает
+void butt() {                         // при нажатии кнопки загорается светодиод в блинке, загорается красный и уФ в ргб модулях и картинка исчезает
   WidgetLED led1(V19);
   int ledstate = 0;
   ledstate = digitalRead(button);
@@ -313,11 +310,9 @@ void butt() {                         // при нажатии кнопки за
 //////////////////////////////////////////////////////ЧТЕНИЕ И ЗАПИСЬ ДАННЫХ ДАТЧИКОВ/SENSOR DATA SEND/READ////////////////////////////////////////////////
 void readSendData() {
 
- float adc0 = mcp3021.readADC();
+  float adc0 = mcp3021.readADC();
   float hum = map(adc0, air_value, water_value, moisture_0, moisture_100);
-    Blynk.virtualWrite(V1, hum); delay(2);        // Отправка данных на сервер Blynk  Давление    // Pressure data send
-
-
+  Blynk.virtualWrite(V1, hum); delay(2);        // Отправка данных на сервер
 
   float t = bme280.readTemperature();
   float h = bme280.readHumidity();
@@ -326,23 +321,12 @@ void readSendData() {
   Blynk.virtualWrite(V15, h); delay(2);        // Отправка данных на сервер Blynk  Влажность   // Humidity data send
   Blynk.virtualWrite(V16, p); delay(2);        // Отправка данных на сервер Blynk  Давление    // Pressure data send
 
-
-
-
-  float eco2 = 0;
-  float tvoc = 0;
-  sgp30.IAQmeasure();
- // if (!sgp30.IAQmeasure())
- // {
-  //  Serial.println("Measurement failed!");
-  //  return;
- // }
-  tvoc = sgp30.TVOC;
-  eco2 = sgp30.eCO2;
-    Serial.println(tvoc);
-      Serial.println(eco2);
-  Blynk.virtualWrite(V12, tvoc); delay(2);        // Отправка данных на сервер Blynk  Влажность   // Humidity data send
-  Blynk.virtualWrite(V13, eco2); delay(2);        // Отправка данных на сервер Blynk  Давление    // Pressure data send
+  mySensor.measureAirQuality();
+  Serial.println("volatile organic compounds = " + String(mySensor.TVOC, 1) + " ppb");
+  Serial.println("carbon dioxide (CO2) = " + String(mySensor.CO2, 1) + " ppm");
+  delay(1500);
+  Blynk.virtualWrite(V12, mySensor.TVOC); delay(2);        // Отправка данных на сервер Blynk
+  Blynk.virtualWrite(V13, mySensor.CO2); delay(2);        // Отправка данных на сервер
 }
 /////////////////////////////////////////////////ГЛАВНЫЙ ЦИКЛ/MAIN LOOP///////////////////////////////////////////////////////////////////////////////
 void loop()
@@ -373,17 +357,6 @@ BLYNK_WRITE(V0)
   }
 }
 
-//////////////////////////////////////////////НАСОС/PUMP///////////////////////////////////////////////////////////////
-BLYNK_WRITE(V5)
-{
-  int buttonstate1 = param.asInt ();
-  if (buttonstate1 == 1) {
-    digitalWrite(pump, HIGH);          // включить если нажата кнопка "Насос" // turn on the pump if button = 1
-  }
-  else    {
-    digitalWrite(pump, LOW);
-  }
-}
 //////////////////////////////////////////ВЕНТИЛЯТОР/COOLER/////////////////////////////////////////////////////////////
 BLYNK_WRITE(V6)
 {
@@ -396,7 +369,7 @@ BLYNK_WRITE(V6)
   }
 }
 /////////////////////////////////////ЭКРАН///////////////////
-BLYNK_WRITE(V4)                         /// картинк и мелодия тетрис
+BLYNK_WRITE(V4)                         /// картинка и мелодия тетрис
 {
   int president = param.asInt ();
   if (president == 1) {
