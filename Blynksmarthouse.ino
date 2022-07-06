@@ -322,8 +322,8 @@ void readSendData() {
   Blynk.virtualWrite(V16, p); delay(2);        // Отправка данных на сервер Blynk  Давление    // Pressure data send
 
   mySensor.measureAirQuality();
-  Serial.println("volatile organic compounds = " + String(mySensor.TVOC, 1) + " ppb");
-  Serial.println("carbon dioxide (CO2) = " + String(mySensor.CO2, 1) + " ppm");
+  Serial.println("volatile organic compounds = " + String(mySensor.TVOC) + " ppb");
+  Serial.println("carbon dioxide (CO2) = " + String(mySensor.CO2) + " ppm");
   delay(1500);
   Blynk.virtualWrite(V12, mySensor.TVOC); delay(2);        // Отправка данных на сервер Blynk
   Blynk.virtualWrite(V13, mySensor.CO2); delay(2);        // Отправка данных на сервер
