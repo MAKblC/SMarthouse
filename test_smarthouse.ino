@@ -270,8 +270,8 @@ void loop()
   delay(1500);
 
   mySensor.measureAirQuality();
-  Serial.println("volatile organic compounds = " + String(mySensor.TVOC, 1) + " ppm");
-  Serial.println("carbon dioxide (CO2) = " + String(mySensor.CO2, 1) + " ppm");
+  Serial.println("volatile organic compounds = " + String(mySensor.TVOC) + " ppm");
+  Serial.println("carbon dioxide (CO2) = " + String(mySensor.CO2) + " ppm");
   delay(1500);
 
   myservo.write(10);
