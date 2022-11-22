@@ -297,7 +297,6 @@ void handleNewMessages(int numNewMessages)
       welcome += "accel y = " + String(normGyro.YAxis, 1) + "\n";
       welcome += "accel z = " + String(normGyro.ZAxis, 1) + "\n";
 #endif
-      bot.sendMessage(chat_id, welcome, "Markdown");
 #ifdef MGS_CLM60
       uint16_t red_data   = 0;
       uint16_t green_data = 0;
@@ -313,6 +312,7 @@ void handleNewMessages(int numNewMessages)
       prox_data = apds9960.readProximity();
       welcome += "color: r:" + String(red_data) + " g:" + String(green_data) + " b:" + String(blue_data) + "\n";
 #endif
+      bot.sendMessage(chat_id, welcome, "Markdown");
     }
 
     if (text == "/photo") { // пост фотографии
