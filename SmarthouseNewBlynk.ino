@@ -31,8 +31,8 @@ TLC59108 leds3(I2C_ADDR + 6); // Стоит только одна перемыч
 #ifdef MGL_RGB3
 #include <PCA9634.h>
 PCA9634 ledsModul(0x08); // (также попробуйте просканировать адрес: https://github.com/MAKblC/Codes/tree/master/I2C%20scanner)
-PCA9634 ledsModul2(0x07);
-PCA9634 ledsModul3(0x06);
+PCA9634 ledsModul2(0x10);
+PCA9634 ledsModul3(0x70);
 #endif
 
 #include <ESP32_Servo.h>                      // конфигурация сервомотора // servo configuration
