@@ -279,8 +279,8 @@ void handleNewMessages(int numNewMessages)
       welcome += "Press: " + String(p, 0) + " hPa\n";
       welcome += "Light: " + String(l, 0) + " Lx\n";
       welcome += "Water level: " + String(hum, 0) + " %\n";
-      welcome += "TVOC: " + String(mySensor.TVOC, 0) + " ppb\n";
-      welcome += "CO2: " + String(mySensor.CO2, 0) + " ppm\n";
+      welcome += "TVOC: " + String(mySensor.TVOC) + " ppb\n";
+      welcome += "CO2: " + String(mySensor.CO2) + " ppm\n";
       welcome += "Distance: " + String(dist, 0) + " mm\n";
 #ifdef MGS_A9
       lsm.read(); // данные гироскопа, акселерометра и магнетометра
