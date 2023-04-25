@@ -438,7 +438,7 @@ void loop()
 }
 
 /////////////////////////////////////////////////////////////////////////// все для музыки
-int note( int type, int duration) {   // нота (какая нота, длительность)
+void note( int type, int duration) {   // нота (какая нота, длительность)
   switch (type) {
     case 1:   ton = 1000; break;
     case 2:   ton = 860;  break;
