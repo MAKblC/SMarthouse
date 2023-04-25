@@ -159,8 +159,8 @@ const byte picture [] PROGMEM = {      // картинка
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-#include <BH1750FVI.h>        // добавляем библиотеку датчика освещенности // adding Light intensity sensor library  
-BH1750FVI LightSensor_1;      // BH1750
+#include <BH1750.h>        // добавляем библиотеку датчика освещенности // adding Light intensity sensor library  
+BH1750 lightMeter;      // BH1750
 
 // добавляем библиотеку датчика температуры, влажности и давления // adding Temp Hum Bar sensor library
 #include <Adafruit_BME280.h>  // BME280                         
@@ -251,9 +251,8 @@ void setup()
   apds9960.enableProximity(true);
 #endif
 
-  LightSensor_1.begin();              // запуск датчика освещенности // turn the light intensity sensor on
-  LightSensor_1.setMode(Continuously_High_Resolution_Mode);
-
+  lightMeter.begin();              // запуск датчика освещенности // turn the light intensity sensor on
+ 
   lox.init();
   lox.setTimeout(500);
 #if defined LONG_RANGE
@@ -380,8 +379,8 @@ void loop()
   Serial.println("IR = " + String(ir_data, 1) + " μW/cm2");
   delay(1500);
 
-  float l = LightSensor_1.getAmbientLight();
-  Serial.println("light intensity = " + String(l, 1) + " lx");
+  float l = lightMeter.readLightLevel();
+  Serial.println("light intensity = " + String(l) + " lx");
   delay(1500);
 
   int  buttonState = digitalRead(button);
