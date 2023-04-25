@@ -65,8 +65,9 @@ int vol2 = 900;  //
 Adafruit_LSM9DS1 lsm = Adafruit_LSM9DS1();
 #endif
 #ifdef MGS_A6
-#include <MPU6050.h>
-MPU6050 mpu;
+#include <Adafruit_MPU6050.h>
+#include <Adafruit_Sensor.h>
+Adafruit_MPU6050 mpu;
 #endif
 #ifdef MGS_CLM60
 #include "Adafruit_APDS9960.h"
@@ -95,7 +96,7 @@ int prevangle = 1;      // предыдущий угол сервомотора 
 #include <BH1750FVI.h>        // добавляем библиотеку датчика освещенности // adding Light intensity sensor library  
 BH1750FVI LightSensor_1;      // BH1750
 
-#include <Adafruit_Sensor.h>  // добавляем библиотеку датчика температуры, влажности и давления // adding Temp Hum Bar sensor library
+// добавляем библиотеку датчика температуры, влажности и давления // adding Temp Hum Bar sensor library
 #include <Adafruit_BME280.h>  // BME280                         
 Adafruit_BME280 bme280;       //
 
@@ -163,54 +164,16 @@ void setup()
   lsm.setupGyro(lsm.LSM9DS1_GYROSCALE_245DPS);
 #endif
 #ifdef MGS_A6
-  while (!mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G, 0x69))
-  {
-    Serial.println("MGS-A6 Не обнаружен! Проверьте адрес!"); // (также попробуйте просканировать адрес: https://github.com/MAKblC/Codes/tree/master/I2C%20scanner)
-    delay(500);
+ if (!mpu.begin(0x69)) { // (0x68) (также попробуйте просканировать адрес: https://github.com/MAKblC/Codes/tree/master/I2C%20scanner)
+    Serial.println("Failed to find MPU6050 chip");
+    while (1) {
+      delay(10);
+    }
   }
-  // Calibrate gyroscope. The calibration must be at rest.
-  // If you don't want calibrate, comment this line.
-  mpu.calibrateGyro();
-
-  // Set threshold sensivty. Default 3.
-  // If you don't want use threshold, comment this line or set 0.
-  mpu.setThreshold(3);
-
-  // Check settings
-  Serial.println();
-
-  Serial.print(" * Sleep Mode:        ");
-  Serial.println(mpu.getSleepEnabled() ? "Enabled" : "Disabled");
-
-  Serial.print(" * Clock Source:      ");
-  switch (mpu.getClockSource())
-  {
-    case MPU6050_CLOCK_KEEP_RESET:     Serial.println("Stops the clock and keeps the timing generator in reset"); break;
-    case MPU6050_CLOCK_EXTERNAL_19MHZ: Serial.println("PLL with external 19.2MHz reference"); break;
-    case MPU6050_CLOCK_EXTERNAL_32KHZ: Serial.println("PLL with external 32.768kHz reference"); break;
-    case MPU6050_CLOCK_PLL_ZGYRO:      Serial.println("PLL with Z axis gyroscope reference"); break;
-    case MPU6050_CLOCK_PLL_YGYRO:      Serial.println("PLL with Y axis gyroscope reference"); break;
-    case MPU6050_CLOCK_PLL_XGYRO:      Serial.println("PLL with X axis gyroscope reference"); break;
-    case MPU6050_CLOCK_INTERNAL_8MHZ:  Serial.println("Internal 8MHz oscillator"); break;
-  }
-
-  Serial.print(" * Gyroscope:         ");
-  switch (mpu.getScale())
-  {
-    case MPU6050_SCALE_2000DPS:        Serial.println("2000 dps"); break;
-    case MPU6050_SCALE_1000DPS:        Serial.println("1000 dps"); break;
-    case MPU6050_SCALE_500DPS:         Serial.println("500 dps"); break;
-    case MPU6050_SCALE_250DPS:         Serial.println("250 dps"); break;
-  }
-
-  Serial.print(" * Gyroscope offsets: ");
-  Serial.print(mpu.getGyroOffsetX());
-  Serial.print(" / ");
-  Serial.print(mpu.getGyroOffsetY());
-  Serial.print(" / ");
-  Serial.println(mpu.getGyroOffsetZ());
-
-  Serial.println();
+  Serial.println("MPU6050 Found!");
+  mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
+  mpu.setGyroRange(MPU6050_RANGE_500_DEG);
+  mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
 #endif
 #ifdef MGS_CLM60
   if (!apds9960.begin()) {
@@ -279,12 +242,12 @@ void readSendData() { // чтение данных и отправка на се
   Blynk.virtualWrite(V9, a.acceleration.z); delay(2);        // Отправка данных на сервер
 #endif
 #ifdef MGS_A6
-  Vector rawGyro = mpu.readRawGyro(); // Сырые значения
-  Vector normGyro = mpu.readNormalizeGyro(); // Преобразованные значения
+  sensors_event_t a, g, temp;
+  mpu.getEvent(&a, &g, &temp);
 
-  Blynk.virtualWrite(V5, normGyro.XAxis); delay(2);        // Отправка данных на сервер
-  Blynk.virtualWrite(V8, normGyro.YAxis); delay(2);        // Отправка данных на сервер
-  Blynk.virtualWrite(V9, normGyro.ZAxis); delay(2);        // Отправка данных на сервер
+  Blynk.virtualWrite(V5, a.acceleration.x); delay(2);        // Отправка данных на сервер
+  Blynk.virtualWrite(V8, a.acceleration.y); delay(2);        // Отправка данных на сервер
+  Blynk.virtualWrite(V9, a.acceleration.z); delay(2);        // Отправка данных на сервер
 
   Serial.print(" Xnorm = ");
   Serial.print(normGyro.XAxis);
