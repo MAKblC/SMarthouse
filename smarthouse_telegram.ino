@@ -78,8 +78,8 @@ const float moisture_100 = 100.0;
 
 #define  wind   17                     // пин вентилятора (16)
 
-#include <BH1750FVI.h>        // добавляем библиотеку датчика освещенности // adding Light intensity sensor library  
-BH1750FVI LightSensor_1;      // BH1750
+#include <BH1750.h>        // добавляем библиотеку датчика освещенности // adding Light intensity sensor library  
+BH1750 lightMeter;     // BH1750
 
 // добавляем библиотеку датчика температуры, влажности и давления // adding Temp Hum Bar sensor library
 #include <Adafruit_BME280.h>  // BME280                         
@@ -182,8 +182,8 @@ void setup()
   if (mySensor.begin() == false)
     Serial.println("No SGP30 Detected. Check connections.");
   mySensor.initAirQuality();
-  LightSensor_1.begin();              // запуск датчика освещенности // turn the light intensity sensor on
-  LightSensor_1.setMode(Continuously_High_Resolution_Mode);
+  
+  lightMeter.begin();             // запуск датчика освещенности // turn the light intensity sensor on
 
   lox.init();
   lox.setTimeout(500);
@@ -228,7 +228,7 @@ void handleNewMessages(int numNewMessages)
     if ((text == "/sensors") || (text == "sensors")) // измеряем данные
     {
       float dist = lox.readRangeSingleMillimeters();
-      float l = LightSensor_1.getAmbientLight();
+      float l = lightMeter.readLightLevel();
       float adc0 = mcp3021.readADC();
       float hum = map(adc0, air_value, water_value, moisture_0, moisture_100);
       float t = bme280.readTemperature();
@@ -240,7 +240,7 @@ void handleNewMessages(int numNewMessages)
       welcome += "Temp: " + String(t, 1) + " C\n";
       welcome += "Hum: " + String(h, 0) + " %\n";
       welcome += "Press: " + String(p, 0) + " hPa\n";
-      welcome += "Light: " + String(l, 0) + " Lx\n";
+      welcome += "Light: " + String(l) + " Lx\n";
       welcome += "Water level: " + String(hum, 0) + " %\n";
       welcome += "TVOC: " + String(mySensor.TVOC) + " ppb\n";
       welcome += "CO2: " + String(mySensor.CO2) + " ppm\n";
