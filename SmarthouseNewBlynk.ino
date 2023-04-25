@@ -93,8 +93,8 @@ Servo myservo;
 int pos = 1;            // начальная позиция сервомотора // servo start position
 int prevangle = 1;      // предыдущий угол сервомотора // previous angle of servo
 
-#include <BH1750FVI.h>        // добавляем библиотеку датчика освещенности // adding Light intensity sensor library  
-BH1750FVI LightSensor_1;      // BH1750
+#include <BH1750.h>       // добавляем библиотеку датчика освещенности // adding Light intensity sensor library  
+BH1750 lightMeter;     // BH1750
 
 // добавляем библиотеку датчика температуры, влажности и давления // adding Temp Hum Bar sensor library
 #include <Adafruit_BME280.h>  // BME280                         
@@ -184,9 +184,8 @@ void setup()
   apds9960.enableProximity(true);
 #endif
 
-  LightSensor_1.begin();              // запуск датчика освещенности // turn the light intensity sensor on
-  LightSensor_1.setMode(Continuously_High_Resolution_Mode);
-
+  lightMeter.begin();              // запуск датчика освещенности // turn the light intensity sensor on
+ 
   lox.init();
   lox.setTimeout(500);
 #if defined LONG_RANGE
@@ -287,7 +286,7 @@ void readSendData() { // чтение данных и отправка на се
   poll_sensor();
   Blynk.virtualWrite(V11, ir_data); delay(2);        // Отправка данных на сервер
 
-  float l = LightSensor_1.getAmbientLight();
+  float l = lightMeter.readLightLevel();
   Blynk.virtualWrite(V3, l); delay(2);        // Отправка данных на сервер
 
   float snd = mcp3221.getVoltage();
