@@ -236,15 +236,15 @@ void handleNewMessages(int numNewMessages)
       float p = bme280.readPressure() / 100.0F;
       mySensor.measureAirQuality();
 
-      String welcome = "Показания датчиков:\n";
-      welcome += "Temp: " + String(t, 1) + " C\n";
-      welcome += "Hum: " + String(h, 0) + " %\n";
-      welcome += "Press: " + String(p, 0) + " hPa\n";
-      welcome += "Light: " + String(l) + " Lx\n";
-      welcome += "Water level: " + String(hum, 0) + " %\n";
-      welcome += "TVOC: " + String(mySensor.TVOC) + " ppb\n";
-      welcome += "CO2: " + String(mySensor.CO2) + " ppm\n";
-      welcome += "Distance: " + String(dist, 0) + " mm\n";
+      String welcome = "Показания датчиков:\n-------------------------------------------\n";
+      welcome += "🌡 Температура воздуха: " + String(t, 1) + " °C\n";
+      welcome += "💧 Влажность воздуха: " + String(h, 0) + " %\n";
+      welcome += "☁ Атмосферное давление: " + String(p, 0) + " гПа\n";
+      welcome += "☀ Освещенность: " + String(l) + " Лк\n";
+      welcome += "🚰 Уровень воды: " + String(hum, 0) + " %\n";
+      welcome += "☢ Концентрация ЛОС: " + String(mySensor.TVOC) + " ppb\n";
+      welcome += "🌬 Концентрация СО2: " + String(mySensor.CO2) + " ppm\n";
+      welcome += "📏 Расстояние: " + String(dist, 0) + " мм\n";
 #ifdef MGS_A9
       lsm.read(); // данные гироскопа, акселерометра и магнетометра
       sensors_event_t a, m, g, temp;
@@ -273,7 +273,7 @@ void handleNewMessages(int numNewMessages)
       apds9960.getColorData(&red_data, &green_data, &blue_data, &clear_data);
       // Определение близости препятствия
       prox_data = apds9960.readProximity();
-      welcome += "color: r:" + String(red_data) + " g:" + String(green_data) + " b:" + String(blue_data) + "\n";
+      welcome += "Цвет: r:" + String(red_data) + " g:" + String(green_data) + " b:" + String(blue_data) + "\n";
 #endif
       bot.sendMessage(chat_id, welcome, "Markdown");
     }
