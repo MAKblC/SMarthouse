@@ -22,6 +22,7 @@
 | Adafruit_SGP30.zip  | библиотека для MGS-CO30 |
 |Adafruit_Unified_Sensor.zip | библиотека для MGS-THP80 |
 |  Adafruit_MPU6050-master.zip     | библиотека для MGS-A6 |
+|  Adafruit_BusIO-master.zip    | библиотека для MGS-A6 |
 |BH1750-master.zip   |библиотека для MGS-L75|
 | ESP32_Servo-master.zip | библиотека для SG90|
 | I2C_graphical_LCD_modified.zip   |библиотека для MGB-LCD12864|
