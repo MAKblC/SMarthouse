@@ -301,9 +301,9 @@ void handleNewMessages(int numNewMessages)
       leds3.setBrightness(0, 0xff);
 #endif
 #ifdef MGL_RGB3
-      ledsModul.write1(3, 0xff);
-      ledsModul2.write1(3, 0xff);
-      ledsModul3.write1(3, 0xff);
+      ledsModul.write1(0, 0xff);
+      ledsModul2.write1(0, 0xff);
+      ledsModul3.write1(0, 0xff);
 #endif
       bot.sendMessage(chat_id, "Свет включен", "");
     }
@@ -315,9 +315,9 @@ void handleNewMessages(int numNewMessages)
       leds3.setBrightness(0, 0x00);
 #endif
 #ifdef MGL_RGB3
-      ledsModul.write1(3, 0x00);
-      ledsModul2.write1(3, 0x00);
-      ledsModul3.write1(3, 0x00);
+      ledsModul.write1(0, 0x00);
+      ledsModul2.write1(0, 0x00);
+      ledsModul3.write1(0, 0x00);
 #endif
       bot.sendMessage(chat_id, "Свет выключен", "");
     }
