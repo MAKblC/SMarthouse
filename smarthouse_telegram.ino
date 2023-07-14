@@ -324,14 +324,26 @@ void handleNewMessages(int numNewMessages)
     if ((text == "/color") || (text == "color"))
     {
 #ifdef MGL_RGB1EN
-      leds.setBrightness(0, random(0, 255));
-      leds2.setBrightness(0, random(0, 255));
-      leds3.setBrightness(0, random(0, 255));
+      leds.setBrightness(3, random(0, 255));
+      leds.setBrightness(2, random(0, 255));
+      leds.setBrightness(5, random(0, 255));
+      leds2.setBrightness(3, random(0, 255));
+      leds2.setBrightness(2, random(0, 255));
+      leds2.setBrightness(5, random(0, 255));
+      leds3.setBrightness(3, random(0, 255));
+      leds3.setBrightness(2, random(0, 255));
+      leds3.setBrightness(5, random(0, 255));
 #endif
 #ifdef MGL_RGB3
       ledsModul.write1(3, random(0, 255));
       ledsModul2.write1(3, random(0, 255));
       ledsModul3.write1(3, random(0, 255));
+      ledsModul.write1(2, random(0, 255));
+      ledsModul2.write1(2, random(0, 255));
+      ledsModul3.write1(2, random(0, 255));
+      ledsModul.write1(5, random(0, 255));
+      ledsModul2.write1(5, random(0, 255));
+      ledsModul3.write1(5, random(0, 255));
 #endif
       bot.sendMessage(chat_id, "Включены случайные цвета", "");
     }
