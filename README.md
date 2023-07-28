@@ -3,7 +3,7 @@
 Набор "Умный Дом Йотк М2" создан для  изучения основ автоматизации, программирования и Интернета вещей (IоТ).
 Данный набор - это идеальная интеграция реального и цифрового пространства.
 
-![house](https://mgbot.ru/upload/iblock/11a/11a16691b17f7560824e6561bcd8c3db.jpg)
+![house](https://mgbot.ru/upload/iblock/063/0y71x5waci0mfg3o6105vq6jzi18v1qy.jpg)
 
 [Ссылка на сайте производителя](https://mgbot.ru/catalog/obrazovatelnye_nabory_iot/umnyy_dom_yotik_m2/)
 
