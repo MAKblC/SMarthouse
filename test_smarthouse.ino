@@ -1,4 +1,7 @@
 // Проверка всех устройств "Умный дом" Йотик М2
+/*
+Не забудьте поправить настройки и адреса устройств в зависмости от комплектации!  
+*/
 
 #include <Wire.h>
 
@@ -64,18 +67,22 @@ Adafruit_APDS9960 apds9960;
 #include <I2C_graphical_LCD_display.h>            // дисплей
 I2C_graphical_LCD_display lcd;
 
+// Датчик протечки MGS-WT1 (также попробуйте просканировать адрес: https://github.com/MAKblC/Codes/tree/master/I2C%20scanner)
+/*
+0x48 (000), 0x49 (001), 0x4A (010), 0x4B (011), 0x4C (100), 0x4D (101), 0x4E (110), 0x4F (111)
+*/
 #include "mcp3021.h"
-uint8_t adcDeviceId =  0b00000001; // Адрес микросхемы A0 "0b00000000"
+uint8_t adcDeviceId =  0b00000001; // Адрес микросхемы 0x49
 MCP3021 mcp3021;
 const float air_value = 570.0; // калибровочные значения
 const float water_value = 335.0;
 const float moisture_0 = 0.0;
 const float moisture_100 = 100.0;
 
-#include "MCP3221.h"            // микрофон
+//Датчик звука MGS-SND504  (также попробуйте просканировать адрес: https://github.com/MAKblC/Codes/tree/master/I2C%20scanner)
+#include "MCP3221.h"           
 const byte DEV_ADDR = 0x4D; // 0x5С // 0x48
 MCP3221 mcp3221(DEV_ADDR);
-
 
 #define  wind   17                     // пин вентилятора (16)
 #define  amper  14                     // пин амперметра
@@ -212,7 +219,7 @@ void setup()
 #endif
 
 
-  buzzer.begin(0x61); // С перемычкой адрес будет 0x60
+  buzzer.begin(0x60); // С перемычкой адрес будет 0x60
   buzzer.setVoltage(0, false);   // выключение звука
   delay(1000);
 
