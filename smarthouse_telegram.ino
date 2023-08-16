@@ -1,3 +1,6 @@
+/*
+Не забудьте поправить настройки и адреса устройств в зависмости от комплектации!  
+*/
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 #include <UniversalTelegramBot.h>
