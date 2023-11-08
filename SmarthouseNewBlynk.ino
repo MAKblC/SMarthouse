@@ -5,7 +5,7 @@
 // Здесь нужно вписать настройки вашего проекта:
 // ID шаблона, имя устройства и токен (желательно на английском и без пробелов)
 #define BLYNK_TEMPLATE_ID "XXXXXXXX"
-#define BLYNK_DEVICE_NAME "XXXXXXXXX"
+#define BLYNK_TEMPLATE_NAME "XXXXXXXXX"
 #define BLYNK_AUTH_TOKEN "XXXXXXXXXXXXXXXXXXXXXXX"
 
 // Параметры вашего Wi-Fi соединения
