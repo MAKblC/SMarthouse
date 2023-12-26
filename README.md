@@ -25,6 +25,7 @@
 |  Adafruit_BusIO-master.zip    | библиотека для MGS-A6 |
 |BH1750-master.zip   |библиотека для MGS-L75|
 | ESP32_Servo-master.zip | библиотека для SG90|
+| GyverPortal.zip   | библиотека для локального сервера|
 | I2C_graphical_LCD_modified.zip   |библиотека для MGB-LCD12864|
 | MCP3021.zip    |библиотека для MGS-WT1|
 | MCP3221_modified.zip|библиотека для MGS-SND504|
