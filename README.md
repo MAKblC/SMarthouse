@@ -32,6 +32,7 @@
 | SparkFun_SGP30_Arduino_Library-1.0.5.zip  |библиотека для MGS-CO30|
 | TLC59108_modified.zip   |библиотека для MGL-RGB1|
 | vl53l0x-arduino.zip   |библиотека для MGS-D10|
+| houseDemo.ino   |скетч для локального сервера| 
 | SmarthouseNewBlynk.ino   |скетч для Blynk новой версии| 
 | smarthouse_telegram.ino  |скетч для Telegram| 
 |test_smarthouse.ino |скетч для тестирования устройств| 
